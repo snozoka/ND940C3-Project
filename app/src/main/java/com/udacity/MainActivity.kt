@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
             if (radioButtonGroup.getCheckedRadioButtonId() == -1)
             {
                 Toast.makeText(applicationContext,"Please select the file to download", Toast.LENGTH_SHORT).show()
-                custom_button.reset()
             }
             else
             {
@@ -55,12 +54,10 @@ class MainActivity : AppCompatActivity() {
 
 
         }
+
         if (complete) {
             // call when download completed
             custom_button.hasCompletedDownload()
-        }
-        else{
-            custom_button.hasNotCompletedDownload()
         }
     }
 

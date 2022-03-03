@@ -40,20 +40,9 @@ class LoadingButton @JvmOverloads constructor(
         // cancel the animation when file is downloaded
         valueAnimator.cancel()
         buttonState = ButtonState.Completed
-        //Return button bacground color to normal state
+        //Return button bacground color and string to normal state
         ContextCompat.getColor(context, R.color.colorPrimary)
-
-        invalidate()
-        requestLayout()
-    }
-
-    // call after downloading is not completed
-    fun hasNotCompletedDownload() {
-        // cancel the animation when file is downloaded
-        valueAnimator.cancel()
-        buttonState = ButtonState.Completed
-        //Return button bacground color to normal state
-        ContextCompat.getColor(context, R.color.colorPrimary)
+        resources.getString(R.string.button_name)
 
         invalidate()
         requestLayout()
@@ -114,10 +103,6 @@ class LoadingButton @JvmOverloads constructor(
     // start the animation when button is clicked
     private fun animation() {
         valueAnimator.start()
-    }
-    fun reset()
-    {
-        ButtonState.Completed
     }
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
