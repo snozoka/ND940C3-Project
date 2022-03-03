@@ -26,30 +26,41 @@ class MainActivity : AppCompatActivity() {
     private lateinit var notificationManager: NotificationManager
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
-    //lateinit var radioButtonGroup: RadioGroup
+    lateinit var radioButtonGroup: RadioGroup
+    private var complete = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        //radioButtonGroup = findViewById<RadioGroup>(R.id.downloadSourceRadioButtonGroup)
+        radioButtonGroup = findViewById<RadioGroup>(R.id.downloadSourceRadioButtonGroup)
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         custom_button.setOnClickListener {
 
-//            if (radioButtonGroup.getCheckedRadioButtonId() == -1)
-//            {
-//                Toast.makeText(applicationContext,"Please select the file to download", Toast.LENGTH_SHORT).show()
-//            }
-//            else
-//            {
-//                // one of the radio buttons is checked
-//
-//            }
-            download()
+            if (radioButtonGroup.getCheckedRadioButtonId() == -1)
+            {
+                Toast.makeText(applicationContext,"Please select the file to download", Toast.LENGTH_SHORT).show()
+                custom_button.reset()
+            }
+            else
+            {
+                // one of the radio buttons is checked
+                complete = true
+                download()
 
+            }
+
+
+        }
+        if (complete) {
+            // call when download completed
+            custom_button.hasCompletedDownload()
+        }
+        else{
+            custom_button.hasNotCompletedDownload()
         }
     }
 
