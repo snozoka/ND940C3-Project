@@ -14,4 +14,7 @@
     <string name="glide_image_loading_library_by_bump_tech">Glide - Image Loading Library by Bump Tech</string>
     <string name="loadapp_current_respository_by_udacity">LoadApp - Current respository by Udacity</string>
     <string name="retrofit_type_safe_http_client_by_android_and_java_by_square_inc">Retrofit - Type-safe HTTP client by Android and Java by Square, Inc</string>
+    <string name="download_notification_channel_id" translatable="false">notification_channel </string>
+    <string name="download_notification_channel_name" translatable="true">download</string>
+    <string name="check_download_status">Check the Status</string>
 </resources>

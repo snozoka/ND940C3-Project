@@ -6,6 +6,8 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import kotlin.properties.Delegates
 
@@ -15,6 +17,7 @@ class LoadingButton @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     private var backGroundColor: Int = Color.BLACK
     private var textColor: Int = Color.BLACK // default color
+    private var itemSelected = false
 
     // tells the compiler that the value of a variable
     // must never be cached as its value may change outside
@@ -43,9 +46,11 @@ class LoadingButton @JvmOverloads constructor(
         //Return button bacground color and string to normal state
         ContextCompat.getColor(context, R.color.colorPrimary)
         resources.getString(R.string.button_name)
-
         invalidate()
         requestLayout()
+    }
+    fun itemSelected(isSelected: Boolean){
+        itemSelected = isSelected
     }
 
 
@@ -100,10 +105,15 @@ class LoadingButton @JvmOverloads constructor(
         animation()
         return true
     }
+
+
     // start the animation when button is clicked
     private fun animation() {
-        valueAnimator.start()
+        if (itemSelected){
+            valueAnimator.start()
+        }
     }
+
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         paint.strokeWidth = 0f
