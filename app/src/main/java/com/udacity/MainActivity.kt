@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        // Check Status inent
+        // Check Status intent
         val checkStatusIntent = Intent(applicationContext, DetailActivity::class.java)
         val checkStatusPendingIntent: PendingIntent = PendingIntent.getBroadcast(
             applicationContext,
@@ -86,14 +86,14 @@ class MainActivity : AppCompatActivity() {
                     applicationContext,
                     applicationContext.getString(R.string.download_notification_channel_id)
                 )
-                    // TODO: Step 1.3 set title, text and icon to builder
+                    //Set title, text and icon to builder
                     .setSmallIcon(R.drawable.ic_assistant_black_24dp)
                     .setContentTitle(applicationContext
                         .getString(R.string.notification_title))
                     .setContentText(getText(R.string.notification_description))
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
-                    // TODO: Step 2.3 add snooze action
+                    //Add check status action
                     .addAction(
                         R.drawable.ic_assistant_black_24dp,
                         applicationContext.getString(R.string.check_download_status),
