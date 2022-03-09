@@ -162,6 +162,23 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.download_notification_channel_id),
                     getString(R.string.download_notification_channel_name)
                 )
+
+                val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                val myDownloadQuery = DownloadManager.Query()
+                //set the query filter to our previously Enqueued download
+                myDownloadQuery.setFilterById(downloadID)
+                var cursor = downloadManager.query(myDownloadQuery)
+                //column for status
+                if(cursor.moveToFirst()){
+                    val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                    val status = cursor.getInt(columnIndex)
+                    Log.i("Column Status Index:", status.toString())
+                    Log.i("Column Status String:", DownloadManager.COLUMN_STATUS)
+
+                    //get the download filename
+                    Log.i("Column title String:", DownloadManager.COLUMN_TITLE)
+                }
+                else Log.i("Error in Cursor:", "Cursor is out of bounds")
             }
         }
     }
@@ -178,26 +195,6 @@ class MainActivity : AppCompatActivity() {
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
-        val myDownloadQuery = DownloadManager.Query()
-        //set the query filter to our previously Enqueued download
-        myDownloadQuery.setFilterById(downloadID)
-        var cursor = downloadManager.query(myDownloadQuery)
-        //column for status
-        if(cursor.moveToFirst()){
-            val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-            val status = cursor.getInt(columnIndex)
-            Log.i("Column Status Index:", status.toString())
-            Log.i("Column Status String:", DownloadManager.COLUMN_STATUS)
-
-            //get the download filename
-            val filename =
-                cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))
-                    .replace("file://", "")
-            //val filename = cursor.getString(filenameIndex)
-            Log.i("File Name:", filename)
-            Log.i("Column title String:", DownloadManager.COLUMN_TITLE)
-        }
-        else Log.i("Error in Cursor:", "Cursor is out of bounds")
     }
 
     companion object {
