@@ -24,9 +24,10 @@ class DetailActivity : AppCompatActivity() {
         val button = findViewById<Button>(R.id.buttonDetailOk)
         button.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
             //Start exit transition
-            startActivity(intent,
-                ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+//            startActivity(intent,
+//                ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
         }
 
     }
