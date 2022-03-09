@@ -1,6 +1,9 @@
 package com.udacity
 
-import android.app.*
+import android.app.DownloadManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,6 +12,9 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -36,34 +42,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        //Variables to pass to Detail Activity
+        val fileName: String
+        val fileStatus: String
+
         radioButtonGroup = findViewById(R.id.downloadSourceRadioButtonGroup)
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-        createChannel(
-            getString(R.string.download_notification_channel_id),
-            getString(R.string.download_notification_channel_name)
-        )
+//        createChannel(
+//            getString(R.string.download_notification_channel_id),
+//            getString(R.string.download_notification_channel_name)
+//        )
 
-        //Create Detail Activity intent
-        val contentIntent = Intent(applicationContext, DetailActivity::class.java)
-        contentIntent.putExtra("FileName", "Test").putExtra("Status", "Success")
 
-        //Create a pendingIntent
-        pendingIntent = PendingIntent.getActivity(
-            applicationContext,
-            NOTIFICATION_ID,
-            contentIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
 
-        // Check Status intent
-        val checkStatusIntent = Intent(applicationContext, DetailActivity::class.java)
-        val checkStatusPendingIntent: PendingIntent = PendingIntent.getBroadcast(
-            applicationContext,
-            REQUEST_CODE,
-            checkStatusIntent,
-            FLAGS
-        )
+
         custom_button.setOnClickListener {
 
             if (radioButtonGroup.getCheckedRadioButtonId() == -1)
@@ -77,29 +70,7 @@ class MainActivity : AppCompatActivity() {
                 complete = true
                 custom_button.itemSelected(complete)
                 download()
-                notificationManager = ContextCompat.getSystemService(
-                    application,
-                    NotificationManager::class.java
-                ) as NotificationManager
 
-                val builder = NotificationCompat.Builder(
-                    applicationContext,
-                    applicationContext.getString(R.string.download_notification_channel_id)
-                )
-                    //Set title, text and icon to builder
-                    .setSmallIcon(R.drawable.ic_assistant_black_24dp)
-                    .setContentTitle(applicationContext
-                        .getString(R.string.notification_title))
-                    .setContentText(getText(R.string.notification_description))
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true)
-                    //Add check status action
-                    .addAction(
-                        R.drawable.ic_assistant_black_24dp,
-                        applicationContext.getString(R.string.check_download_status),
-                        checkStatusPendingIntent
-                    )
-                notificationManager.notify(NOTIFICATION_ID, builder.build())
 
             }
 
@@ -127,9 +98,8 @@ class MainActivity : AppCompatActivity() {
                 NotificationManager::class.java
             )
             notificationManager.createNotificationChannel(notificationChannel)
-
         }
-        }
+    }
 
 
     private val receiver = object : BroadcastReceiver() {
@@ -137,6 +107,61 @@ class MainActivity : AppCompatActivity() {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             if(id == downloadID){
                 custom_button.hasCompletedDownload()
+
+                // get selected radio button from radioGroup
+                val selectedId = radioButtonGroup.getCheckedRadioButtonId()
+
+                // find the radiobutton by returned id
+                var radioButton = findViewById<RadioButton>(selectedId)
+
+                //Create Detail Activity intent
+                val contentIntent = Intent(applicationContext, DetailActivity::class.java)
+                contentIntent.putExtra("FileName", radioButton.text).putExtra("Status", "Success")
+
+                //Create a pendingIntent
+                pendingIntent = PendingIntent.getActivity(
+                    applicationContext,
+                    NOTIFICATION_ID,
+                    contentIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+                // Check Status intent
+                val checkStatusIntent = Intent(applicationContext, DetailActivity::class.java)
+                val checkStatusPendingIntent: PendingIntent = PendingIntent.getBroadcast(
+                    applicationContext,
+                    REQUEST_CODE,
+                    checkStatusIntent,
+                    FLAGS
+                )
+
+                notificationManager = ContextCompat.getSystemService(
+                    application,
+                    NotificationManager::class.java
+                ) as NotificationManager
+
+                val builder = NotificationCompat.Builder(
+                    applicationContext,
+                    applicationContext.getString(R.string.download_notification_channel_id)
+                )
+                    //Set title, text and icon to builder
+                    .setSmallIcon(R.drawable.ic_assistant_black_24dp)
+                    .setContentTitle(applicationContext
+                        .getString(R.string.notification_title))
+                    .setContentText(getText(R.string.notification_description))
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    //Add check status action
+                    .addAction(
+                        R.drawable.ic_assistant_black_24dp,
+                        applicationContext.getString(R.string.check_download_status),
+                        checkStatusPendingIntent
+                    )
+                notificationManager.notify(NOTIFICATION_ID, builder.build())
+
+                createChannel(
+                    getString(R.string.download_notification_channel_id),
+                    getString(R.string.download_notification_channel_name)
+                )
             }
         }
     }
@@ -153,6 +178,26 @@ class MainActivity : AppCompatActivity() {
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+        val myDownloadQuery = DownloadManager.Query()
+        //set the query filter to our previously Enqueued download
+        myDownloadQuery.setFilterById(downloadID)
+        var cursor = downloadManager.query(myDownloadQuery)
+        //column for status
+        if(cursor.moveToFirst()){
+            val columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+            val status = cursor.getInt(columnIndex)
+            Log.i("Column Status Index:", status.toString())
+            Log.i("Column Status String:", DownloadManager.COLUMN_STATUS)
+
+            //get the download filename
+            val filename =
+                cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))
+                    .replace("file://", "")
+            //val filename = cursor.getString(filenameIndex)
+            Log.i("File Name:", filename)
+            Log.i("Column title String:", DownloadManager.COLUMN_TITLE)
+        }
+        else Log.i("Error in Cursor:", "Cursor is out of bounds")
     }
 
     companion object {
