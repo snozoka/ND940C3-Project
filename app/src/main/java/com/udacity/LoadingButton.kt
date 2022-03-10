@@ -6,8 +6,6 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
-import android.widget.RadioGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import kotlin.properties.Delegates
 
@@ -23,6 +21,7 @@ class LoadingButton @JvmOverloads constructor(
     // must never be cached as its value may change outside
     @Volatile
     private var progress: Double = 0.0
+
 
     private val pointPosition: PointF = PointF(0.0f, 0.0f)
     private var widthSize = 0

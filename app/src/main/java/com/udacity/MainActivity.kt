@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity() {
             else
             {
                 // one of the radio buttons is checked
+                ovalProgress.animateProgress()
                 complete = true
                 custom_button.itemSelected(complete)
                 download()
