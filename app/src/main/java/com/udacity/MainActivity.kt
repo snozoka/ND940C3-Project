@@ -109,6 +109,7 @@ class MainActivity : AppCompatActivity() {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             if(id == downloadID){
                 custom_button.hasCompletedDownload()
+                ovalProgress.hasCompletedProgress()
 
                 // get selected radio button from radioGroup
                 val selectedId = radioButtonGroup.getCheckedRadioButtonId()

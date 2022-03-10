@@ -42,7 +42,7 @@ class LoadingButton @JvmOverloads constructor(
         // cancel the animation when file is downloaded
         valueAnimator.cancel()
         buttonState = ButtonState.Completed
-        //Return button bacground color and string to normal state
+        //Return button background color and string to normal state
         ContextCompat.getColor(context, R.color.colorPrimary)
         resources.getString(R.string.button_name)
         invalidate()

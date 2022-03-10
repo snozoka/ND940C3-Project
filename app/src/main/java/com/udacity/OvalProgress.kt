@@ -69,6 +69,7 @@ class OvalProgress @JvmOverloads constructor(
     private fun getCurrentPercentageToFill() =
         (ARC_FULL_ROTATION_DEGREE * (currentPercentage / PERCENTAGE_DIVIDER)).toFloat()
 
+    var animator = ValueAnimator()
     fun animateProgress() {
         // 1
         val valuesHolder = PropertyValuesHolder.ofFloat(
@@ -78,9 +79,9 @@ class OvalProgress @JvmOverloads constructor(
         )
 
         // 2
-        val animator = ValueAnimator().apply {
+        animator = ValueAnimator().apply {
             setValues(valuesHolder)
-            duration = 1000
+            duration = 2000
             interpolator = AccelerateDecelerateInterpolator()
 
             // 3
@@ -97,6 +98,15 @@ class OvalProgress @JvmOverloads constructor(
         }
         // 7
         animator.start()
+    }
+    // call after downloading is completed
+    fun hasCompletedProgress() {
+        // cancel the animation when file is downloaded
+        animator.cancel()
+        //Return button bacground color and string to normal state
+        ContextCompat.getColor(context, R.color.lightGray)
+        invalidate()
+        requestLayout()
     }
     companion object {
         const val ARC_FULL_ROTATION_DEGREE = 360
