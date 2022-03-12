@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var notificationManager: NotificationManager
     private lateinit var pendingIntent: PendingIntent
+    private lateinit var checkStatusPendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
     lateinit var radioButtonGroup: RadioGroup
     private var complete = false
@@ -129,11 +130,12 @@ class MainActivity : AppCompatActivity() {
                     PendingIntent.FLAG_UPDATE_CURRENT
                 )
                 // Check Status intent
-                val checkStatusIntent = Intent(applicationContext, DetailActivity::class.java)
-                val checkStatusPendingIntent: PendingIntent = PendingIntent.getBroadcast(
+                //val checkStatusIntent = Intent(applicationContext, DetailActivity::class.java)
+                //checkStatusIntent.putExtra("FileName", radioButton.text).putExtra("Status", "Success")
+                checkStatusPendingIntent = PendingIntent.getBroadcast(
                     applicationContext,
                     REQUEST_CODE,
-                    checkStatusIntent,
+                    contentIntent,
                     FLAGS
                 )
 
@@ -157,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                     .addAction(
                         R.drawable.ic_assistant_black_24dp,
                         applicationContext.getString(R.string.check_download_status),
-                        checkStatusPendingIntent
+                        pendingIntent
                     )
                 notificationManager.notify(NOTIFICATION_ID, builder.build())
 

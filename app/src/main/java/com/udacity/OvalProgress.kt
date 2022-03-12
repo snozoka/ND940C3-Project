@@ -28,7 +28,7 @@ class OvalProgress @JvmOverloads constructor(
         }
     }
 
-    private fun setSpace() {
+     fun setSpace() {
         val horizontalCenter = (width.div(2)).toFloat()
         val verticalCenter = (height.div(2)).toFloat()
         val ovalSize = 200
@@ -59,10 +59,10 @@ class OvalProgress @JvmOverloads constructor(
         // 1
         strokeCap = Paint.Cap.ROUND
     }
-    private fun drawBackgroundArc(it: Canvas) {
+     fun drawBackgroundArc(it: Canvas) {
         it.drawArc(ovalSpace, 0f, 360f, false, parentArcPaint)
     }
-    private fun drawInnerArc(canvas: Canvas) {
+     fun drawInnerArc(canvas: Canvas) {
         val percentageToFill = getCurrentPercentageToFill()
         canvas.drawArc(ovalSpace, 270f, percentageToFill, false, fillArcPaint)
     }

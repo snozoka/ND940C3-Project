@@ -127,6 +127,7 @@ class LoadingButton @JvmOverloads constructor(
                 0f, 0f,
                 (width * (progress / 100)).toFloat(), height.toFloat(), paint
             )
+
         }
         // check the button state
         val buttonText = if (buttonState == ButtonState.Loading)
