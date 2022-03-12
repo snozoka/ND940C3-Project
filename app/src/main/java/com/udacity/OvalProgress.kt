@@ -31,7 +31,7 @@ class OvalProgress @JvmOverloads constructor(
      fun setSpace() {
         val horizontalCenter = (width.div(2)).toFloat()
         val verticalCenter = (height.div(2)).toFloat()
-        val ovalSize = 200
+        val ovalSize = 50
         ovalSpace.set(
             horizontalCenter - ovalSize,
             verticalCenter - ovalSize,

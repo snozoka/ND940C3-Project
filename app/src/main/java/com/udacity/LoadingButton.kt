@@ -16,6 +16,7 @@ class LoadingButton @JvmOverloads constructor(
     private var backGroundColor: Int = Color.BLACK
     private var textColor: Int = Color.BLACK // default color
     private var itemSelected = false
+    var ovalProgress = OvalProgress(context)
 
     // tells the compiler that the value of a variable
     // must never be cached as its value may change outside
@@ -111,7 +112,14 @@ class LoadingButton @JvmOverloads constructor(
         if (itemSelected){
             valueAnimator.start()
         }
+        ovalProgress.animateProgress()
     }
+    private val rect = RectF(
+        740f,
+        50f,
+        810f,
+        110f
+    )
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -127,6 +135,15 @@ class LoadingButton @JvmOverloads constructor(
                 0f, 0f,
                 (width * (progress / 100)).toFloat(), height.toFloat(), paint
             )
+            paint.color = ContextCompat.getColor(context, R.color.colorAccent)
+            canvas?.drawArc(rect, 0f, (360 * (progress / 100)).toFloat(), true, paint)
+
+//            //Draw circular progress
+//            ovalProgress.setSpace()
+//            if (canvas != null) {
+//                ovalProgress.drawBackgroundArc(canvas)
+//                ovalProgress.drawInnerArc(canvas)
+//            }
 
         }
         // check the button state
